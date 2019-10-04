@@ -5,8 +5,8 @@ from sys import argv
 
 
 
-def rotate(img, angle):
-    rotated_img = tr.rotate(img, angle)
+def rotate_(img, angle):
+    rotated_img = rotate(img, angle)
     imsave('rotated_img.png', rotated_img)
 
 def shift(img, vector):
@@ -16,7 +16,7 @@ def shift(img, vector):
     imsave('shifted_img.png', shifted)
 
 def resize_(img, dim):
-    imsave('resized_img.png', resize(img, (img.shape[0] // dim[0], img.shape[1] // dim[1]), anti_aliasing=True))
+    imsave('resized_img.png', resize(img, (img.shape[0] // dim[0], img.shape[1] // dim[1])))
 
 def symmetry(img, axis):
     if axis == 1:
@@ -26,29 +26,21 @@ def symmetry(img, axis):
     else:
         ValueError
 
-def process(img, actions):
-    for action in actions:
-        if action[0] == 'rotate':
-            rotate(img, action[1])
-        elif action[0] == 'shift':
-            shift(img, action[1])
-        elif action[0] == 'resize':
-            resize_(img, action[1])
-        elif action[0] == 'symmetry':
-            symmetry(img, action[1])
-        else:
-            raise ValueError
 
 if __name__ == "__main__":
-	img = imread(argv[1])
+	# EXAMPLE:
+	# python lab1.py pic.jpg rotate 90 shift 50 50 resize 0.5 0.5 symmetry 1
 	
-	print(type(argv[2]))
-	#process(argv[1])
-	'''
-	process(img, [
-		('rotate', 30), 
-		('shift', (100, 100)),
-		('resize', (3, 0.5)),
-		('symmetry', 1)
-	])
-	'''
+	img = imread(argv[1])
+	actions = argv[2:]
+	for i,arg in enumerate(actions):
+		if arg == 'rotate':
+			rotate_(img, float(actions[i+1]))
+		elif arg == 'shift':
+			shift(img, [float(actions[i+1]), float(actions[i+2])])
+		elif arg == 'resize':
+			resize_(img, [float(actions[i+1]), float(actions[i+2])])
+		elif arg == 'symmetry':
+			symmetry(img, int(actions[i+1]))
+		else:
+			continue
